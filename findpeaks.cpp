@@ -1,15 +1,9 @@
-std::vector<int> LocMax_pw(std::vector<int> Vi, int pProm, int w)
-//std::vector<int> findmax(std::vector<int> Vi, int pProm, int wdthmin, int wdthmax)
-//std::vector<int> LocMax(std::vector<uchar> Vi, int pP)
+std::vector<int> findpeaks(std::vector<int> Vi, int pProm, int w)
 {
-	
-	//Búsqueda de máximos locales
-
 	int Tam=Vi.size();
 	std::vector<int>x,y,xProm,yProm, width;
 	int j,d1,d2;
 	int i=1;
-	//ROS_INFO("Width: %i",Tam); 256
 	while (i<Tam)
 	{
 		j=1;
@@ -55,7 +49,6 @@ std::vector<int> LocMax_pw(std::vector<int> Vi, int pProm, int w)
 			}
 			fy=y[fi]>y[i]? y[fi]:0;	
 		}
-	/////////////////////////////////////////////////////////////
 		pmin=Vi[x[i]];
 		fmin=Vi[x[i]];
 		if ((py==0)&&(fy==0))
@@ -64,7 +57,6 @@ std::vector<int> LocMax_pw(std::vector<int> Vi, int pProm, int w)
 			{
 				if (Vi[j]<pmin)
 					pmin=Vi[j];		
-//			ROS_INFO("j1: %i",j);
 			}
 			P=pmin;
 			
@@ -119,16 +111,10 @@ std::vector<int> LocMax_pw(std::vector<int> Vi, int pProm, int w)
 		d2=j;
 		int D=d2+d1;
 		if ((y[i]-P>=pProm)&&(D<w))
-		//if ((y[i]-P>=pProm)&&(D<wdthmax)&&(D>wdthmin))		
 		{
 			xProm.push_back(x[i]);
-			/*ROS_INFO("w: %i",D);
-			int prom=y[i]-P;
-			ROS_INFO("p: %i",prom);*/
 		}
 
 	}
-
-	//return x;
 	return xProm;//
 }
