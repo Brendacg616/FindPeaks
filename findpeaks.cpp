@@ -1,4 +1,4 @@
-std::vector<int> findpeaks(std::vector<int> Vi, int pProm, int w)
+std::vector<int> findmax(std::vector<int> Vi, int pProm, int wdthmin, int wdthmax)
 {
 	int Tam=Vi.size();
 	std::vector<int>x,y,xProm,yProm, width;
@@ -110,11 +110,11 @@ std::vector<int> findpeaks(std::vector<int> Vi, int pProm, int w)
 			j++;
 		d2=j;
 		int D=d2+d1;
-		if ((y[i]-P>=pProm)&&(D<w))
+		if ((y[i]-P>=pProm)&&(D<wdthmax)&&(D>wdthmin))
 		{
 			xProm.push_back(x[i]);
 		}
 
 	}
-	return xProm;//
+	return xProm;
 }
