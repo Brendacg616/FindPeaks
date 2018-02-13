@@ -1,120 +1,148 @@
-std::vector<int> findpeaks(std::vector<int> Vi, int pProm, int w)
+#include <vector>
+
+std::vector<int> FindLocalMaxima(std::vector<int> dataVector, int minProminence, int maxProminence, int minWidth, int maxWidth)
 {
-	int Tam=Vi.size();
-	std::vector<int>x,y,xProm,yProm, width;
-	int j,d1,d2;
+	int dataVectorSize=dataVector.size();
+	std::vector<int>localMaximaIndex,localMaximaValue,prominenceValue, inRangeLocalMaxima;
+	int j;
+	int currentValue, nextValue, prevValue;
+	int totalLocalMaxima;
+	int prevLocalMaximaIndex;
+	int nextLocalMaximaIndex;
+	int prevHigherLocalMaximaValue;
+	int nextHigherLocalMaximaValue;
+	int leftWidth, rightWidth, width;
+	int prevMinimum, nextMinimum, minimumValue;
+	int prominence;
 	int i=1;
-	while (i<Tam)
+/********************* FIND LOCAL MAXIMA ***************************/
+	while (i<dataVectorSize)
 	{
 		j=1;
-		if ((Vi[i-1]<Vi[i])&&(Vi[i]>=Vi[i+1]))
+		currentValue=dataVector[i];
+		prevValue=dataVector[i-1];
+		nextValue=dataVector[i+j];
+
+		if ((prevValue<currentValue)&&(currentValue>=nextValue))
 		{	
-			while ((Vi[i]==Vi[i+j])&&((i+j)<Tam))
+			while ((currentValue==nextValue)&&((i+j)<dataVectorSize))
 			{
 				j++;
+				nextValue=dataVector[i+j];
 			}
-			if (Vi[i]>Vi[i+j])
+			if (currentValue>nextValue)
 			{
-				x.push_back(i);
-				y.push_back(Vi[i]);
+				localMaximaIndex.push_back(i);
+				localMaximaValue.push_back(currentValue);
 			}
 		}
 		i+=j;
 	}
 
-	int TamM=x.size();
-	int pi,fi,px,py,fx,fy,fP, pmin, fmin,P;
-	xProm.erase(xProm.begin(),xProm.end());
-	for (i=0;i<TamM;i++)
-	{
-		pi=i-1;
-		fi=i+1;
-		py=0;
-		fy=0;
-		fP=0;
+	totalLocalMaxima=localMaximaIndex.size();
+	prominenceValue.erase(prominenceValue.begin(),prominenceValue.end());
 
-		if (pi>=0)
+/********************* GET PROMINENCE ***************************/
+	for (i=0;i<totalLocalMaxima;i++)
+	{
+		prevLocalMaximaIndex=i-1;
+		nextLocalMaximaIndex=i+1;
+		prevHigherLocalMaximaValue=0;
+		nextHigherLocalMaximaValue=0;
+
+		if (prevLocalMaximaIndex>=0)
 		{	
-			while ((pi>=1)&&(y[pi]<=y[i]))//
+			while ((prevLocalMaximaIndex>=1)&&(localMaximaValue[prevLocalMaximaIndex]<=localMaximaValue[i]))
 			{	
-				pi--; 
+				prevLocalMaximaIndex--; 
 			}
-			py=y[pi]>y[i]? y[pi]:0;
+			if (localMaximaValue[prevLocalMaximaIndex]>localMaximaValue[i]){
+				prevHigherLocalMaximaValue=localMaximaValue[prevLocalMaximaIndex];
+			} else {
+				prevHigherLocalMaximaValue=0;
+			}
 		}
-		if (fi<TamM)
+		if (nextLocalMaximaIndex<totalLocalMaxima)
 		{
-			while ((fi<TamM-1)&&(y[fi]<=y[i]))//
+			while ((nextLocalMaximaIndex<totalLocalMaxima-1)&&(localMaximaValue[nextLocalMaximaIndex]<=localMaximaValue[i]))//
 			{	
-				fi++;
+				nextLocalMaximaIndex++;
 			}
-			fy=y[fi]>y[i]? y[fi]:0;	
+			if (localMaximaValue[nextLocalMaximaIndex]>localMaximaValue[i]){
+				nextHigherLocalMaximaValue=localMaximaValue[nextLocalMaximaIndex];
+			} else {
+				nextHigherLocalMaximaValue=0;
+			}
 		}
-		pmin=Vi[x[i]];
-		fmin=Vi[x[i]];
-		if ((py==0)&&(fy==0))
+		prevMinimum=dataVector[localMaximaIndex[i]];
+		nextMinimum=dataVector[localMaximaIndex[i]];
+		minimumValue=dataVector[localMaximaIndex[i]];
+		if ((prevHigherLocalMaximaValue==0)&&(nextHigherLocalMaximaValue==0))
 		{
-			for (j=0;j<Tam;j++)
+			for (j=0;j<dataVectorSize;j++)
 			{
-				if (Vi[j]<pmin)
-					pmin=Vi[j];		
+				if (dataVector[j]<minimumValue)
+					minimumValue=dataVector[j];		
 			}
-			P=pmin;
+			
 			
 		}
 		else
 		{	
-			if (pi<0)
+			if (prevLocalMaximaIndex<0)
 			{
-				for (j=x[i];j>=0;j--)
+				for (j=localMaximaIndex[i];j>=0;j--)
 				{
-					if (Vi[j]<pmin)
-						pmin=Vi[j];
+					if (dataVector[j]<prevMinimum)
+						prevMinimum=dataVector[j];
 				}
 				
 			}
 			else 
 			{
-				for (j=x[i];j>x[pi];j--)
+				for (j=localMaximaIndex[i];j>localMaximaValue[prevLocalMaximaIndex];j--)
 				{
-					if (Vi[j]<pmin)
-						pmin=Vi[j];			
+					if (dataVector[j]<prevMinimum)
+						prevMinimum=dataVector[j];			
 				}
 				
 			}
-			if (fi>=TamM-1)
+			if (nextLocalMaximaIndex>=totalLocalMaxima-1)
 			{
-				for (j=x[i];j<Tam;j++)
+				for (j=localMaximaIndex[i];j<dataVectorSize;j++)
 				{
-					if (Vi[j]<fmin)
-					fmin=Vi[j];
+					if (dataVector[j]<nextMinimum)
+					nextMinimum=dataVector[j];
 				}
 				
 			}
 			else 
 			{
-				for (j=x[i];j<x[fi];j++)
+				for (j=localMaximaIndex[i];j<localMaximaIndex[nextLocalMaximaIndex];j++)
 				{
-					if (Vi[j]<fmin)
-					fmin=Vi[j];
+					if (dataVector[j]<nextMinimum)
+					nextMinimum=dataVector[j];
 				}
 				
 			}
-			P= pmin>fmin? pmin:fmin;
+			minimumValue= prevMinimum>nextMinimum? prevMinimum:nextMinimum;
 		}
+		prominence=localMaximaValue[i]-minimumValue;
+/*************************** GET WIDTH ********************************/
 		j=1;
-		while (((x[i]-j)>0)&&(Vi[x[i]-j]-P>(y[i]-P)/2))
-			j++;
-		d1=j;
+		while (((localMaximaIndex[i]-j)>0)&&(dataVector[localMaximaIndex[i]-j]-minimumValue>(prominence)/2)) { j++;}
+		leftWidth=j;
 		j=1;
-		while (((x[i]+j)<Tam)&&(Vi[x[i]+j]-P>(y[i]-P)/2))
-			j++;
-		d2=j;
-		int D=d2+d1;
-		if ((y[i]-P>=pProm)&&(D<w))
+		while (((localMaximaIndex[i]+j)<dataVectorSize)&&(dataVector[localMaximaIndex[i]+j]-minimumValue>(prominence)/2)) { j++;}
+		rightWidth=j;
+		int width=leftWidth+rightWidth;
+
+/********************* IS THE PEAK IN RANGE? ***************************/	
+		if ((localMaximaValue[i]-minimumValue>=minProminence)&&(localMaximaValue[i]-minimumValue<=maxProminence)&&(width>=minWidth)&&(width<=maxWidth))
 		{
-			xProm.push_back(x[i]);
+			inRangeLocalMaxima.push_back(localMaximaIndex[i]);
 		}
 
-	}
-	return xProm;//
+	} 
+	return inRangeLocalMaxima;
 }
