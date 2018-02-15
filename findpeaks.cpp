@@ -1,6 +1,7 @@
 #include <vector>
 
 std::vector<int> FindLocalMaxima(std::vector<int> dataVector, int minProminence, int maxProminence, int minWidth, int maxWidth)
+//std::vector<int> LocMax_pw(std::vector<int> dataVector, int minProminence, int maxProminence, int minWidth, int maxWidth)
 {
 	int dataVectorSize=dataVector.size();
 	std::vector<int>localMaximaIndex,localMaximaValue,prominenceValue, inRangeLocalMaxima;
